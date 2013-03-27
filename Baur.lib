@@ -1,0 +1,73 @@
+//------------------------------------------------------------------------------
+// Makros für den EibPC von BAUR
+//------------------------------------------------------------------------------
+// vim: syntax=enerscript
+
+// Zeitserver für KNX Bus
+// @date        26.03.2013
+// @version     1
+// @author      Stefan Betz
+:begin Zeitserver(DatumGA, UhrzeitGA)
+:info $Sendet alle 15 Minuten Datum und Uhrzeit auf den KNX Bus.$\\
+$Gruppenadresse für Datum (d24)$\\
+$Gruppenadresse für Uhrzeit (t24)$
+:shortinfo $Zeitserver für Datum/Uhrzeit auf dem KNX Bus$
+if (mtime(00,00) or mtime(15,00) or mtime(30,00) or mtime(45,00)) then {
+write(DatumGA,setdate());
+write(UhrzeitGA,settime());
+} endif
+:end
+
+// Verbrauchsanzeige
+// @date        27.03.2013
+// @version     1
+// @author      Stefan Betz
+:begin Verbrauchsanzeige(VerbrauchButtonID, VerbrauchGA)
+:info $Aktualisiert eine Anzeige zum Stromverbrauch (KWh)$\\
+$Anzeigeelement$
+$Gruppenadresse vom Zähler (KWh)$
+:shortinfo $Verbrauchsanzeige (KWh)$
+if stime(0) then webdisplay(VerbrauchButtonID, stringformat(VerbrauchGA, 4, 3, 3, 2)+$ KWh$, INFO, INACTIVE, GREEN) endif
+:end
+
+// Leistungsanzeige
+// @date        27.03.2013
+// @version     1
+// @author      Stefan Betz
+:begin Leistungsanzeige(LeisungButtonID, LeistungGA)
+:info $Aktualisiert eine Anzeige zum Stromverbrauch (KW)$\\
+$Anzeigeelement$
+$Gruppenadresse vom Zähler (KW)$
+:shortinfo $Leistungsanzeige (KW)$
+if stime(0) then webdisplay(LeistungButtonID, stringformat(LeistungGA, 0, 1, 3, 2)+$ Watt$, INFO, INACTIVE, GREEN) endif
+:end
+
+// Verbrauchsmonitor
+// @date        26.03.2013
+// @version     1
+// @author      Stefan Betz
+:begin Verbrauchsmonitor(VerbrauchElementID, SeitenElementID, VerbrauchGA)
+:info $Füllt die Energieverbrauchsgrafik mit Daten$\\
+$Grafik$\\
+$Seite$\\
+$Gruppenadresse vom Zähler (f32, Wh)$
+:shortinfo $Energiemonitor welcher Graphen füllt$
+if ((mod(minute(),5u08)==0u08) or (minute()==0u08)) then {
+mpchart(VerbrauchElementID, WebZeit, convert(VerbrauchGA,0f16), 0,SeitenElementID);
+} endif
+:end
+
+// Leistungsmonitor
+// @date        26.03.2013
+// @version     1
+// @author      Stefan Betz
+:begin Leistungsmonitor(LeistungElementID, SeitenElementID, LeistungGA)
+:info $Füllt die Leistungsgrafik mit Daten$\\
+$Grafik$\\
+$Seite$\\
+$Gruppenadresse vom Zähler (s32, W)$
+:shortinfo $Energiemonitor welcher Graphen füllt$
+if ((mod(minute(),5u08)==0u08) or (minute()==0u08)) then {
+mpchart(LeistungElementID, WebZeit, convert(LeistungGA,0f16), 0,SeitenElementID);
+} endif
+:end
