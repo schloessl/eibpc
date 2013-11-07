@@ -71,3 +71,79 @@ if ((mod(minute(),5u08)==0u08) or (minute()==0u08)) then {
 mpchart(LeistungElementID, WebZeit, convert(LeistungGA,0f16), 0,SeitenElementID);
 } endif
 :end
+
+// Sonnenaufgang
+// @date        16.04.2013
+// @version     1
+// @author      Stefan Betz
+:begin Sonnenaufgang(SonnenaufgangButtonID)
+:info $Aktualisiert eine Anzeige vom Sonnenaufgang$\\
+$Anzeigeelement$
+:shortinfo $Sonnenaufgangsanzeige$
+if stime(0) then webdisplay(SonnenaufgangButtonID, stringformat(sunrisehour(), 0, 3, 2, 2)+$:$+stringformat(sunriseminute(), 0, 3, 2, 2), LIGHT, INACTIVE, GREEN) endif
+:end
+
+// Sonnenuntergang
+// @date        16.04.2013
+// @version     1
+// @author      Stefan Betz
+:begin Sonnenuntergang(SonnenuntergangButtonID)
+:info $Aktualisiert eine Anzeige vom Sonnenuntergang$\\
+$Anzeigeelement$
+:shortinfo $Sonnenuntergangsanzeige$
+if stime(0) then webdisplay(SonnenuntergangButtonID, stringformat(sunsethour(), 0, 3, 2, 2)+$:$+stringformat(sunsetminute(), 0, 3, 2, 2), NIGHT, INACTIVE, GREEN) endif
+:end
+
+// Helligkeitsanzeige
+// @date	16.04.2013
+// @version	1 
+// @author	Stefan Betz
+:begin Helligkeitsanzeige(ID, HelligkeitGA)
+:info $Eine Statusanzeige für die aktuelle Helligkeit.$ \\
+	:$Zahl zwischen 0 und 39 als ID des Elements$\\
+	:$Gruppenadresse Licht (f16)$
+:shortinfo $Statusanzeige für die aktuelle Helligkeit.$
+initGA(HelligkeitGA)
+if stime(0) then display(ID,HelligkeitGA,WEATHER,INACTIVE,GREEN) endif
+:end
+
+// Windalarmanzeige
+// @date	07.11.2013
+// @version	1
+// @author	Stefan Betz
+:begin Windalarmanzeige(ID, WindGA)
+:info $Eine Statusanzeige für den Windalarm.$ \\
+      :$Zahl zwischen 0 und 39 als ID des Elements$\\
+      :$Gruppenadresse Windalarm(b01)$
+:shortinfo $Statusanzeige für den Windalarm.$
+initGA(WindGA)
+if stime(0) and WindGA then display(ID,$Ja$,WIND,DARKRED,GREY) endif
+if stime(0) and !WindGA then display(ID,$Nein$,WIND,GREEN,GREEN) endif
+:end
+
+// Regenalarmanzeige
+// @date	07.11.2013
+// @version	1
+// @author	Stefan Betz
+:begin Regenalarmanzeige(ID, RegenGA)
+:info $Eine Statusanzeige für den Regenalarm.$ \\
+      :$Zahl zwischen 0 und 39 als ID des Elements$\\
+      :$Gruppenadresse Regenalarm(b01)$
+:shortinfo $Statusanzeige für den Regenalarm.$
+initGA(RegenGA)
+if stime(0) and RegenGA then display(ID,$Ja$,WEATHER,STATE6,GREY) endif
+if stime(0) and !RegenGA then display(ID,$Nein$,WEATHER,INACTIVE,GREEN) endif
+:end
+
+// Windgeschwindigkeitsanzeige
+// @date	07.11.2013
+// @version	1 
+// @author	Stefan Betz
+:begin Windgeschwindigkeitsanzeige(ID, WindgeschwindigkeitGA)
+:info $Eine Statusanzeige für die aktuelle Windgeschwindigkeit.$ \\
+	:$Zahl zwischen 0 und 39 als ID des Elements$\\
+	:$Gruppenadresse Licht (f16)$
+:shortinfo $Statusanzeige für die aktuelle Windgeschwindigkeit.$
+initGA(WindgeschwindigkeitGA)
+if change(WindgeschwindigkeitGA) then display(ID,stringformat(WindgeschwindigkeitGA,4,3,3,1)+$ m/s$,WIND,INACTIVE,GREEN) endif
+:end
