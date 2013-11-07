@@ -147,3 +147,22 @@ if stime(0) and !RegenGA then display(ID,$Nein$,WEATHER,INACTIVE,GREEN) endif
 initGA(WindgeschwindigkeitGA)
 if change(WindgeschwindigkeitGA) then display(ID,stringformat(WindgeschwindigkeitGA,4,3,3,1)+$ m/s$,WIND,INACTIVE,GREEN) endif
 :end
+
+// ZeitUmschaltButton
+// @date	23.10.2013
+// @version	1
+// @author	Stefan Betz
+:begin ZeitUmschaltButton(ID, PageID, Name, GA, Stunde, Minute)
+Signal^Name = AUS
+Signal^Name_Status = Signal^Name
+if pbutton(ID,PageID)==1 then {
+        Signal^Name = !Signal^Name_Status;
+        Signal^Name_Status = Signal^Name
+} endif
+if Signal^Name == EIN then {
+ 	pdisplay(ID,$EIN$,CLOCK,ACTIVE,GREEN,PageID) 
+} else {
+ 	pdisplay(ID,$AUS$,CLOCK,INACTIVE,GREY,PageID) 
+} endif
+if Signal^Name and htime(Stunde, Minute, 00) then write(GA,EIN) endif
+:end
