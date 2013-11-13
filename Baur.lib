@@ -166,3 +166,16 @@ if Signal^Name == EIN then {
 } endif
 if Signal^Name and htime(Stunde, Minute, 00) then write(GA,EIN) endif
 :end
+
+// Temperaturanzeige
+// @date	13.11.2013
+// @version	1 
+// @author	Stefan Betz
+:begin Temperaturanzeige(ID, TemperaturGA)
+:info $Eine Statusanzeige für die aktuelle Temperatur.$ \\
+	:$Zahl zwischen 0 und 39 als ID des Elements$\\
+	:$Gruppenadresse Licht (f16)$
+:shortinfo $Statusanzeige für die aktuelle Temperatur.$
+initGA(TemperaturGA)
+if change(TemperaturGA) then display(ID,stringformat(TemperaturGA,4,3,3,1)+$°C$,TEMPERATURE,INACTIVE,GREEN) endif
+:end
